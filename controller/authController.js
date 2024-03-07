@@ -73,46 +73,47 @@ const signUp = async (req, res, next) => {
    * @returns User Object , cookie
   */
   
-//   const signIn = async (req, res, next) => {
-//     const { email, password } = req.body
-//     // send response with error message if email or passsword is missing
-//     if (!email || !password) {
-//       return res.status(400).json({
-//         success: false,
-//         message: 'Email and Password are required',
-//       })
-//     }
+  const signIn = async (req, res, next) => {
+    const { email, password } = req.body
+    // send response with error message if email or passsword is missing
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and Password are required',
+      })
+    }
   
-//     try {
-//       //  check user exit or not
-//       const user = await userModel.findOne({ email }).select('+password')
+    try {
+      //  check user exit or not
+      const user = await userModel.findOne({ email }).select('+password')
   
-//       // if user is null or the passowrd is not match then send the error message
-//       if (!user || !(await bcrypt.compare(password, user.password))) {
-//         return res.status(401).json({
-//           success: false,
-//           message: 'Invalid Email or Password',
-//         })
-//       }
-//       // send the user object and jwt token in cookie
-//       const token = user.jwtToken()
-//       user.password = undefined
-//       const cookieOption = {
-//         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-//         httpOnly: true, // cookie is not accessable by the client
-//       }
-//       res.cookie('token', token, cookieOption)
-//       res.status(200).json({
-//         success: true,
-//         data: user,
-//       })
-//     } catch (error) {
-//       res.status(500).json({
-//         success: false,
-//         message: error.message,
-//       })
-//     }
-//   }
-  
-  module.exports = { signUp }
+      // if user is null or the passowrd is not match then send the error message
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid Email or Password',
+        })
+      }
+      // send the user object and jwt token in cookie
+      const token = user.jwtToken()
+      user.password = undefined
+      const cookieOption = {
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        httpOnly: true, // cookie is not accessable by the client
+      }
+      res.cookie('token', token, cookieOption)
+      res.status(200).json({
+        success: true,
+        data: user,
+      })
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      })
+    }
+  }
+ 
+
+module.exports = { signUp , signIn}
   
